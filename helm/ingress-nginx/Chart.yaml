@@ -1,0 +1,5 @@
+apiVersion: v2
+name: ingress-nginx
+description: ingress-nginx bootstrap chart
+type: application
+version: 0.1.0

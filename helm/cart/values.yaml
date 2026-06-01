@@ -1,0 +1,16 @@
+replicaCount: 2
+
+image:
+  repository: sameerroboshopacr.azurecr.io/cart
+  tag: v1
+  pullPolicy: IfNotPresent
+
+service:
+  port: 8080
+
+env:
+  REDIS_HOST: redis
+  CATALOGUE_HOST: catalogue
+  CATALOGUE_PORT: "8080"
+
+resources: {}

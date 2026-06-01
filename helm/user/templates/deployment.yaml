@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: user
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+
+spec:
+
+  replicas: {{ .Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: user
+
+  template:
+
+    metadata:
+      labels:
+        app: user
+
+    spec:
+
+      containers:
+
+      - name: user
+
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - containerPort: 8080
+
+        env:
+
+        - name: REDIS_URL
+          value: "{{ .Values.env.REDIS_URL }}"
+
+        - name: MONGO_URL
+          value: "{{ .Values.env.MONGO_URL }}"
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5

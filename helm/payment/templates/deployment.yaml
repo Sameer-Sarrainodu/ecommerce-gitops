@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: payment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+
+spec:
+
+  replicas: {{ .Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: payment
+
+  template:
+
+    metadata:
+      labels:
+        app: payment
+
+    spec:
+
+      containers:
+
+      - name: payment
+
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - containerPort: 8080
+
+        env:
+
+        - name: CART_HOST
+          value: "{{ .Values.env.CART_HOST }}"
+
+        - name: CART_PORT
+          value: "{{ .Values.env.CART_PORT }}"
+
+        - name: USER_HOST
+          value: "{{ .Values.env.USER_HOST }}"
+
+        - name: USER_PORT
+          value: "{{ .Values.env.USER_PORT }}"
+
+        - name: PAYMENT_GATEWAY
+          value: "{{ .Values.env.PAYMENT_GATEWAY }}"
+
+        - name: AMQP_HOST
+          value: "{{ .Values.env.AMQP_HOST }}"
+
+        - name: AMQP_USER
+          value: "{{ .Values.env.AMQP_USER }}"
+
+        - name: AMQP_PASS
+          value: "{{ .Values.env.AMQP_PASS }}"
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5

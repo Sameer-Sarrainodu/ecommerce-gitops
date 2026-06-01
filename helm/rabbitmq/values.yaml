@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: rabbitmq
+  tag: "4.1-management"
+  pullPolicy: IfNotPresent
+
+service:
+  port: 5672
+  managementPort: 15672
+
+storage:
+  size: 5Gi
+
+auth:
+  username: roboshop
+  password: roboshop123

@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: shipping-schema
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+
+spec:
+
+  template:
+
+    spec:
+
+      restartPolicy: Never
+
+      containers:
+
+      - name: schema-loader
+
+        image: mysql:8.0
+
+        command:
+        - sh
+        - -c
+        - |
+          mysql -h mysql -uroot -p{{ .Values.mysqlRootPassword }} < /schema/schema.sql
+          mysql -h mysql -uroot -p{{ .Values.mysqlRootPassword }} < /schema/app-user.sql
+          mysql -h mysql -uroot -p{{ .Values.mysqlRootPassword }} < /schema/master-data.sql
+
+        volumeMounts:
+
+        - name: schema
+          mountPath: /schema
+
+      volumes:
+
+      - name: schema
+
+        configMap:
+          name: shipping-schema

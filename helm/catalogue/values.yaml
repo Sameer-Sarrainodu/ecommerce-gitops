@@ -1,0 +1,14 @@
+replicaCount: 2
+
+image:
+  repository: sameerroboshopacr.azurecr.io/catalogue
+  tag: v1
+  pullPolicy: IfNotPresent
+
+service:
+  port: 8080
+
+resources: {}
+
+env:
+  MONGO_URL: "mongodb://mongodb:27017/catalogue"

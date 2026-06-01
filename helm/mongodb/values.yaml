@@ -1,0 +1,12 @@
+replicaCount: 1
+
+image:
+  repository: mongo
+  tag: "7.0"
+  pullPolicy: IfNotPresent
+
+service:
+  port: 27017
+
+storage:
+  size: 10Gi

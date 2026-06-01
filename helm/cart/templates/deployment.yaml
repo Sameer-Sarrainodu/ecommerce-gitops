@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: cart
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+
+spec:
+
+  replicas: {{ .Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: cart
+
+  template:
+
+    metadata:
+      labels:
+        app: cart
+
+    spec:
+
+      containers:
+
+      - name: cart
+
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - containerPort: 8080
+
+        env:
+
+        - name: REDIS_HOST
+          value: "{{ .Values.env.REDIS_HOST }}"
+
+        - name: CATALOGUE_HOST
+          value: "{{ .Values.env.CATALOGUE_HOST }}"
+
+        - name: CATALOGUE_PORT
+          value: "{{ .Values.env.CATALOGUE_PORT }}"
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5

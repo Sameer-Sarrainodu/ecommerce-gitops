@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: roboshop-applications
+  namespace: argocd
+
+spec:
+
+  generators:
+
+  - list:
+      elements:
+
+      - app: ingress-nginx
+
+      - app: mongodb
+      - app: mysql
+      - app: redis
+      - app: rabbitmq
+
+      - app: catalogue-schema
+      - app: shipping-schema
+
+      - app: catalogue
+      - app: user
+      - app: cart
+      - app: shipping
+      - app: payment
+      - app: frontend
+
+      - app: roboshop-ingress
+
+  template:
+
+    metadata:
+      name: "{{app}}"
+
+    spec:
+
+      project: default
+
+      source:
+        repoURL: https://github.com/Sameer-Sarrainodu/ecommerce-gitops.git
+        targetRevision: HEAD
+        path: helm/{{app}}
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: roboshop
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+
+        syncOptions:
+        - CreateNamespace=true

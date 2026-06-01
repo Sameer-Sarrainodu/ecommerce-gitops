@@ -1,0 +1,12 @@
+replicaCount: 1
+
+image:
+  repository: redis
+  tag: "7.2"
+  pullPolicy: IfNotPresent
+
+service:
+  port: 6379
+
+storage:
+  size: 5Gi
