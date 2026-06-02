@@ -11,6 +11,10 @@ spec:
 
   backoffLimit: 1
 
+  ttlSecondsAfterFinished: 300
+
+  activeDeadlineSeconds: 600
+
   template:
 
     spec:
@@ -35,11 +39,16 @@ spec:
         - sh
         - -c
         - |
+          set -e
+
+          echo "Waiting for MySQL..."
+
           until nc -z mysql 3306
           do
-            echo "waiting for mysql"
             sleep 5
           done
+
+          echo "Loading schema.sql"
 
           mysql \
             -h mysql \
@@ -47,11 +56,15 @@ spec:
             -p${MYSQL_ROOT_PASSWORD} \
             < /schema.sql
 
+          echo "Loading app-user.sql"
+
           mysql \
             -h mysql \
             -uroot \
             -p${MYSQL_ROOT_PASSWORD} \
             < /app-user.sql
+
+          echo "Loading master-data.sql"
 
           mysql \
             -h mysql \
@@ -59,3 +72,5 @@ spec:
             -p${MYSQL_ROOT_PASSWORD} \
             cities \
             < /master-data.sql
+
+          echo "Shipping schema completed successfully"

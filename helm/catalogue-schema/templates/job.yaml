@@ -11,6 +11,10 @@ spec:
 
   backoffLimit: 1
 
+  ttlSecondsAfterFinished: 300
+
+  activeDeadlineSeconds: 600
+
   template:
 
     spec:
@@ -27,12 +31,21 @@ spec:
         - sh
         - -c
         - |
+          set -e
+
+          echo "Waiting for MongoDB..."
+
           until nc -z mongodb 27017
           do
-            echo "waiting for mongodb"
             sleep 5
           done
 
-          mongosh mongodb/catalogue /init.js
+          echo "Loading init.js"
 
-          mongosh mongodb/catalogue /master-data.js
+          mongosh mongodb://mongodb:27017/catalogue /init.js
+
+          echo "Loading master-data.js"
+
+          mongosh mongodb://mongodb:27017/catalogue /master-data.js
+
+          echo "Catalogue schema completed successfully"
