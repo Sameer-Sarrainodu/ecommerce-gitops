@@ -17,6 +17,12 @@ spec:
       values: |
         controller:
           replicaCount: 2
+          service:
+            annotations:
+              # Fixes Port 80 health probes by pointing to Nginx's internal check route
+              service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
+              # Fixes Port 443 by ensuring Azure uses a plain TCP connection check instead of HTTP
+              service.beta.kubernetes.io/azure-load-balancer-health-probe-num-of-probes: "2"
 
   destination:
     server: https://kubernetes.default.svc
