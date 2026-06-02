@@ -29,6 +29,8 @@ spec:
       - app: payment
       - app: frontend
 
+      - app: toolbox      
+
       - app: roboshop-ingress
 
   template:
