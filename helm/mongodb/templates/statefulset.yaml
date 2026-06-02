@@ -3,55 +3,48 @@ kind: StatefulSet
 
 metadata:
   name: mongodb
+
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 
 spec:
+
   serviceName: mongodb-headless
 
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
 
   selector:
     matchLabels:
       app: mongodb
 
   template:
+
     metadata:
       labels:
         app: mongodb
 
     spec:
+
       containers:
+
       - name: mongodb
 
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: mongo:7.0
 
         ports:
         - containerPort: 27017
-
-        readinessProbe:
-          tcpSocket:
-            port: 27017
-          initialDelaySeconds: 20
-          periodSeconds: 10
-
-        livenessProbe:
-          tcpSocket:
-            port: 27017
-          initialDelaySeconds: 60
-          periodSeconds: 20
 
         volumeMounts:
         - name: mongodb-storage
           mountPath: /data/db
 
   volumeClaimTemplates:
+
   - metadata:
       name: mongodb-storage
 
     spec:
+
       storageClassName: managed-csi
 
       accessModes:
@@ -59,4 +52,4 @@ spec:
 
       resources:
         requests:
-          storage: {{ .Values.storage.size }}
+          storage: 10Gi

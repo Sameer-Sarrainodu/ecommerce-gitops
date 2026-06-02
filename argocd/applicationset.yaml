@@ -6,17 +6,19 @@ metadata:
   namespace: argocd
 
 spec:
-
   generators:
-
   - list:
       elements:
 
+      - app: ingress-nginx
 
       - app: mongodb
       - app: mysql
       - app: redis
       - app: rabbitmq
+
+      - app: catalogue-schema
+      - app: shipping-schema
 
       - app: catalogue
       - app: user
@@ -25,7 +27,7 @@ spec:
       - app: payment
       - app: frontend
 
-      - app: toolbox      
+      - app: toolbox
 
       - app: roboshop-ingress
 

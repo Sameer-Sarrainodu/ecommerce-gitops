@@ -3,40 +3,44 @@ kind: StatefulSet
 
 metadata:
   name: mysql
+
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 
 spec:
+
   serviceName: mysql-headless
 
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
 
   selector:
     matchLabels:
       app: mysql
 
   template:
+
     metadata:
       labels:
         app: mysql
 
     spec:
+
       containers:
+
       - name: mysql
 
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-        ports:
-        - containerPort: 3306
+        image: mysql:5.7
 
         env:
+
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-secret
               key: root-password
+
+        ports:
+        - containerPort: 3306
 
         readinessProbe:
           exec:
@@ -44,10 +48,6 @@ spec:
             - sh
             - -c
             - mysqladmin ping -uroot -p${MYSQL_ROOT_PASSWORD}
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
 
         livenessProbe:
           exec:
@@ -55,24 +55,23 @@ spec:
             - sh
             - -c
             - mysqladmin ping -uroot -p${MYSQL_ROOT_PASSWORD}
-          initialDelaySeconds: 60
-          periodSeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 3
 
         volumeMounts:
         - name: mysql-storage
           mountPath: /var/lib/mysql
 
   volumeClaimTemplates:
+
   - metadata:
       name: mysql-storage
 
     spec:
+
       storageClassName: managed-csi
+
       accessModes:
       - ReadWriteOnce
 
       resources:
         requests:
-          storage: {{ .Values.storage.size }}
+          storage: 10Gi
