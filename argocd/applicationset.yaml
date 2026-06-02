@@ -12,7 +12,6 @@ spec:
   - list:
       elements:
 
-      - app: ingress-nginx
 
       - app: mongodb
       - app: mysql
