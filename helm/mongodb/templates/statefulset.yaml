@@ -64,6 +64,8 @@ spec:
       name: mongodb-storage
 
     spec:
+      storageClassName: managed-csi
+
       accessModes:
       - ReadWriteOnce
 
