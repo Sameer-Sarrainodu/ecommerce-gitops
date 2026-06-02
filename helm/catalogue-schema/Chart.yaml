@@ -1,5 +1,0 @@
-apiVersion: v2
-name: catalogue-schema
-description: Load catalogue MongoDB schema
-type: application
-version: 0.1.0

@@ -19,9 +19,6 @@ spec:
       - app: redis
       - app: rabbitmq
 
-      - app: catalogue-schema
-      - app: shipping-schema
-
       - app: catalogue
       - app: user
       - app: cart
