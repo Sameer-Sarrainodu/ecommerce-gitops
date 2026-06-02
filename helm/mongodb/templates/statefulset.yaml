@@ -32,28 +32,16 @@ spec:
         - containerPort: 27017
 
         readinessProbe:
-          exec:
-            command:
-            - mongosh
-            - --quiet
-            - --eval
-            - db.runCommand({ ping: 1 })
+          tcpSocket:
+            port: 27017
           initialDelaySeconds: 20
           periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
 
         livenessProbe:
-          exec:
-            command:
-            - mongosh
-            - --quiet
-            - --eval
-            - db.runCommand({ ping: 1 })
+          tcpSocket:
+            port: 27017
           initialDelaySeconds: 60
           periodSeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 3
 
         volumeMounts:
         - name: mongodb-storage
