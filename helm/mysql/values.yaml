@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: sameerroboshopacr.azurecr.io/mysql
-  tag: v2
+  tag: v3
   pullPolicy: IfNotPresent
 
 service:
