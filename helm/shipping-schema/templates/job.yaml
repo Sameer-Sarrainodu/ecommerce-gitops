@@ -1,56 +1,38 @@
 apiVersion: batch/v1
 kind: Job
-
 metadata:
   name: shipping-schema
-
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-
 spec:
-
   backoffLimit: 1
-
   template:
-
     spec:
-
       restartPolicy: Never
-
       containers:
-
       - name: shipping-schema
-
         image: sameerroboshopacr.azurecr.io/shipping-schema:v1
-
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-secret
               key: root-password
-
         command:
         - bash
         - -c
         - |
-          echo "Waiting for MySQL..."
-
-          until mysqladmin \
-            -h mysql \
-            -uroot \
-            -p"${MYSQL_ROOT_PASSWORD}" \
-            ping --silent
+          echo "Checking connection to MySQL host..."
+          until timeout 1 bash -c 'cat < /dev/null > /dev/tcp/mysql/3306' 2>/dev/null
           do
+            echo "Waiting for mysql port 3306 to open..."
             sleep 5
           done
 
-          echo "MySQL is ready"
+          echo "MySQL is up! Starting schema migrations..."
 
           mysql -h mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" < /schema.sql
-
           mysql -h mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" < /app-user.sql
-
           mysql -h mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" cities < /master-data.sql
-
-          echo "Shipping schema completed"
+          
+          echo "Schema migration completed successfully."
