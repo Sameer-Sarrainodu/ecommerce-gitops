@@ -3,12 +3,13 @@ kind: Job
 
 metadata:
   name: shipping-schema
+
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 
 spec:
+
+  backoffLimit: 1
 
   template:
 
@@ -18,26 +19,43 @@ spec:
 
       containers:
 
-      - name: schema-loader
+      - name: shipping-schema
 
-        image: mysql:8.0
+        image: sameerroboshopacr.azurecr.io/shipping-schema:v1
+
+        env:
+
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root-password
 
         command:
         - sh
         - -c
         - |
-          mysql -h mysql -uroot -p{{ .Values.mysqlRootPassword }} < /schema/schema.sql
-          mysql -h mysql -uroot -p{{ .Values.mysqlRootPassword }} < /schema/app-user.sql
-          mysql -h mysql -uroot -p{{ .Values.mysqlRootPassword }} < /schema/master-data.sql
+          until nc -z mysql 3306
+          do
+            echo "waiting for mysql"
+            sleep 5
+          done
 
-        volumeMounts:
+          mysql \
+            -h mysql \
+            -uroot \
+            -p${MYSQL_ROOT_PASSWORD} \
+            < /schema.sql
 
-        - name: schema
-          mountPath: /schema
+          mysql \
+            -h mysql \
+            -uroot \
+            -p${MYSQL_ROOT_PASSWORD} \
+            < /app-user.sql
 
-      volumes:
-
-      - name: schema
-
-        configMap:
-          name: shipping-schema
+          mysql \
+            -h mysql \
+            -uroot \
+            -p${MYSQL_ROOT_PASSWORD} \
+            cities \
+            < /master-data.sql

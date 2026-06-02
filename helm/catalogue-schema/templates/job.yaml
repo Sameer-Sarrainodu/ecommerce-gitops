@@ -3,12 +3,13 @@ kind: Job
 
 metadata:
   name: catalogue-schema
+
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 
 spec:
+
+  backoffLimit: 1
 
   template:
 
@@ -18,24 +19,20 @@ spec:
 
       containers:
 
-      - name: schema-loader
+      - name: catalogue-schema
 
-        image: mongo:7.0
+        image: sameerroboshopacr.azurecr.io/catalogue-schema:v1
 
         command:
         - sh
         - -c
         - |
-          mongosh mongodb/catalogue /schema/master-data.js
+          until nc -z mongodb 27017
+          do
+            echo "waiting for mongodb"
+            sleep 5
+          done
 
-        volumeMounts:
+          mongosh mongodb/catalogue /init.js
 
-        - name: schema
-          mountPath: /schema
-
-      volumes:
-
-      - name: schema
-
-        configMap:
-          name: catalogue-schema
+          mongosh mongodb/catalogue /master-data.js
