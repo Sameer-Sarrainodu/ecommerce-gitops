@@ -19,9 +19,11 @@ spec:
           replicaCount: 2
           service:
             annotations:
-              # Fixes Port 80 health probes by pointing to Nginx's internal check route
+              # CRITICAL: Forces AKS to automatically create the NSG rule with Destination: Any / VirtualNetwork
+              service.beta.kubernetes.io/azure-allowed-service-ports: "80,443"
+              # Fixes Port 80 health probes
               service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
-              # Fixes Port 443 by ensuring Azure uses a plain TCP connection check instead of HTTP
+              # Fixes Port 443 health probes
               service.beta.kubernetes.io/azure-load-balancer-health-probe-num-of-probes: "2"
 
   destination:
