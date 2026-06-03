@@ -1,0 +1,31 @@
+{{- range $app := .Values.apps }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+
+metadata:
+  name: {{ $app.name }}
+  namespace: roboshop
+
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+
+spec:
+
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ $app.name }}
+
+  minReplicas: {{ $app.minReplicas }}
+  maxReplicas: {{ $app.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ $app.cpu }}
+
+{{- end }}

@@ -1,0 +1,31 @@
+apps:
+
+  - name: frontend
+    minReplicas: 2
+    maxReplicas: 10
+    cpu: 70
+
+  - name: catalogue
+    minReplicas: 2
+    maxReplicas: 10
+    cpu: 70
+
+  - name: user
+    minReplicas: 2
+    maxReplicas: 10
+    cpu: 70
+
+  - name: cart
+    minReplicas: 2
+    maxReplicas: 10
+    cpu: 70
+
+  - name: payment
+    minReplicas: 2
+    maxReplicas: 10
+    cpu: 70
+
+  - name: shipping
+    minReplicas: 2
+    maxReplicas: 10
+    cpu: 70

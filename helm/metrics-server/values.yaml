@@ -1,0 +1,7 @@
+metrics-server:
+
+  nodeSelector:
+    kubernetes.azure.com/mode: system
+
+  args:
+    - --kubelet-insecure-tls
