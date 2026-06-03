@@ -10,24 +10,49 @@ spec:
   - list:
       elements:
 
+      - app: external-secrets
+        namespace: external-secrets
+
+      - app: external-secrets-config
+        namespace: roboshop
+
+      - app: metrics-server
+        namespace: kube-system
+
       - app: mongodb
+        namespace: roboshop
       - app: mysql
+        namespace: roboshop
       - app: redis
+        namespace: roboshop
       - app: rabbitmq
+        namespace: roboshop
 
       - app: catalogue-schema
+        namespace: roboshop
       - app: shipping-schema
+        namespace: roboshop
 
       - app: catalogue
+        namespace: roboshop
       - app: user
+        namespace: roboshop
       - app: cart
+        namespace: roboshop
       - app: shipping
+        namespace: roboshop
       - app: payment
+        namespace: roboshop
       - app: frontend
+        namespace: roboshop
+      - app: hpa
+        namespace: roboshop
 
       - app: toolbox
+        namespace: roboshop
 
       - app: roboshop-ingress
+        namespace: roboshop
 
   template:
 
@@ -45,7 +70,7 @@ spec:
 
       destination:
         server: https://kubernetes.default.svc
-        namespace: roboshop
+        namespace: "{{namespace}}"
 
       syncPolicy:
         automated:

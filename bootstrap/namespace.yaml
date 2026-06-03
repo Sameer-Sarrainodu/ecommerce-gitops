@@ -10,10 +10,14 @@ kind: Namespace
 
 metadata:
   name: argocd
-
 ---
 apiVersion: v1
 kind: Namespace
 
 metadata:
   name: roboshop
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-secrets
