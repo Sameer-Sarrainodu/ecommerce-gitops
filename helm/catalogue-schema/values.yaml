@@ -1,4 +1,4 @@
 replicaCount: 1
 image:
   repository: sameerroboshopacr.azurecr.io/catalogue-schema
-  tag: 1
+  tag: 9
