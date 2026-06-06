@@ -7,7 +7,7 @@ external-secrets:
     name: external-secrets
 
     annotations:
-      azure.workload.identity/client-id: "<MANAGED_IDENTITY_CLIENT_ID>"
+      azure.workload.identity/client-id: "fce55892-3d72-4242-82b9-5ad5805753a4"
 
   podLabels:
     azure.workload.identity/use: "true"
