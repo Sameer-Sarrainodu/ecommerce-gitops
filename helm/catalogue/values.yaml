@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: sameerroboshopacr.azurecr.io/catalogue
-  tag: v1
+  tag: 1
   pullPolicy: IfNotPresent
 
 service:
