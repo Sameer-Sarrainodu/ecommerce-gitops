@@ -6,6 +6,3 @@ service:
 
 storage:
   size: 10Gi
-
-auth:
-  rootPassword: RoboShop@1

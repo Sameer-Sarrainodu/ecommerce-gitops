@@ -12,5 +12,6 @@ external-secrets:
   podLabels:
     azure.workload.identity/use: "true"
 
-  nodeSelector:
-    kubernetes.azure.com/mode: system
+  nodeSelector: {}
+
+  tolerations: []

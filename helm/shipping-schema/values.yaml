@@ -1,1 +1,3 @@
-{}
+image:
+  repository: sameerroboshopacr.azurecr.io/shipping-schema
+  tag: 1

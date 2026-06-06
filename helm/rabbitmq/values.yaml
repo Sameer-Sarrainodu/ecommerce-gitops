@@ -12,6 +12,3 @@ service:
 storage:
   size: 5Gi
 
-auth:
-  username: roboshop
-  password: roboshop123
